@@ -3,5 +3,5 @@ composer.lock
 vendor/
 
 # Config.json file changes should be ignored to prevent private API access keys being uploaded to Git
-config.json
+.config.json
 
