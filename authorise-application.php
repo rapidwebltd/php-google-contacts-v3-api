@@ -4,9 +4,7 @@
 
 // Note that the redirectUri value should point towards a hosted version of 'redirect_handler.php'.
 
-require_once "vendor/google/apiclient/src/Google/autoload.php";
-
-require_once 'helpers/GoogleHelper.php';
+require_once 'vendor/autoload.php';
 
 use rapidweb\googlecontacts\helpers\GoogleHelper;
 

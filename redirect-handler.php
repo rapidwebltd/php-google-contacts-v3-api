@@ -7,9 +7,7 @@ if (!isset($_GET['code'])) die('No code URL paramete present.');
 
 $code = $_GET['code'];
 
-require_once "vendor/google/apiclient/src/Google/autoload.php";
-
-require_once 'helpers/GoogleHelper.php';
+require_once 'vendor/autoload.php';
 
 use rapidweb\googlecontacts\helpers\GoogleHelper;
 

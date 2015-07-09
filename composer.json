@@ -8,5 +8,10 @@
     "require": {
         "php": ">=5.2.1",
         "google/apiclient": ">=1.1.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "rapidweb\\googlecontacts\\": "."
+        }
     }
 }
