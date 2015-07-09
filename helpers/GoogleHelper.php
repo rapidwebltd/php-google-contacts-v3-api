@@ -1,30 +1,22 @@
 <?php
-require_once "vendor/google/apiclient/src/Google/autoload.php";
-
 namespace rapidweb\googlecontacts\helpers;
 
 abstract class GoogleHelper
 {
-    private static $clientID = '';
-    private static $clientSecret = '';
-    private static $redirectUri = '';
-    private static $developerKey = '';
-    
-    public static function loadConfig()
+    private static function loadConfig()
     {
         $contents = file_get_contents('config.json');
         
-        $data = json_decode($contents);
+        $config = json_decode($contents);
         
-        foreach($data as $key => $value)
-        {
-            $this->$key = $value;
-        }
+        return $config;
     }
     
     public static function getClient()
     {
-        $client = new Google_Client();
+        $config = self::loadConfig();
+        
+        $client = new \Google_Client();
         
         $client->setApplicationName("Rapid Web Google Contacts API");
         
@@ -37,17 +29,33 @@ abstract class GoogleHelper
         /*'https://www.google.com/m8/feeds/user/',*/
         ));
         
-        $client->setClientId(self::clientID);
-        $client->setClientSecret(self::clientSecret);
-        $client->setRedirectUri(self::redirectUri);
+        $client->setClientId($config->clientID);
+        $client->setClientSecret($config->clientSecret);
+        $client->setRedirectUri($config->redirectUri);
         $client->setAccessType('offline'); 
-        $client->setDeveloperKey(self::developerKey);
+        $client->setDeveloperKey($config->developerKey);
+        
+        if (isset($config->refreshToken) && $config->refreshToken)
+        {
+            $client->refreshToken($config->refreshToken);
+        }
         
         return $client;
     }
     
-    public static function getAuthUrl(Google_Client $client)
+    public static function getAuthUrl(\Google_Client $client)
     {
-        return $client->getAuthUrl();
+        return $client->createAuthUrl();
     }
+    
+    public static function authenticate(\Google_Client $client, $code)
+    {
+        $client->authenticate($code);
+    }
+    
+    public static function getAccessToken(\Google_Client $client)
+    {
+        return json_decode($client->getAccessToken());
+    }
+    
 }
