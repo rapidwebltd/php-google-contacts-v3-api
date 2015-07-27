@@ -21,7 +21,7 @@ abstract class ContactFactory
         $xmlContacts->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
 
         foreach ($xmlContacts->entry as $xmlContactsEntry) {
-            $contactDetails = [];
+            $contactDetails = array();
 
             $contactDetails['id'] = (string) $xmlContactsEntry->id;
             $contactDetails['name'] = (string) $xmlContactsEntry->title;
