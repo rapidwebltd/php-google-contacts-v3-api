@@ -26,6 +26,18 @@ abstract class ContactFactory
             $contactDetails['id'] = (string) $xmlContactsEntry->id;
             $contactDetails['name'] = (string) $xmlContactsEntry->title;
 
+            foreach ($xmlContactsEntry->children() as $key => $value) {
+                $attributes = $value->attributes();
+                
+                if ($key == 'link') {
+                    if ($attributes['rel'] == 'edit') {
+                        $contactDetails['editURL'] = (string) $attributes['href'];
+                    } elseif ($attributes['rel'] == 'self') {
+                        $contactDetails['selfURL'] = (string) $attributes['href'];
+                    }
+                }
+            }
+
             $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
 
             foreach ($contactGDNodes as $key => $value) {
@@ -44,7 +56,8 @@ abstract class ContactFactory
         return $contactsArray;
     }
 
-    public static function get()
+    public static function update(Contact $contact)
     {
+        
     }
 }
