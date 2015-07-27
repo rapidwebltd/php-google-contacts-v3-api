@@ -1,4 +1,7 @@
 # php-google-contacts-v3-api
+
+[![StyleCI](https://styleci.io/repos/38814668/shield)](https://styleci.io/repos/38814668)
+
 PHP library for the Google Contacts API (v3)
 
 ## Dependencies
