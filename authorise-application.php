@@ -1,4 +1,5 @@
 <?php
+
 // After filling in the clientID, clientSecret and redirectUri (within 'config.json'), you should visit this page
 // to get the authorisation URL.
 
@@ -12,5 +13,5 @@ $client = GoogleHelper::getClient();
 
 $authUrl = GoogleHelper::getAuthUrl($client);
 
-echo "Go to the following URL to authorise your application for Google Contacts: ".$authUrl;
+echo 'Go to the following URL to authorise your application for Google Contacts: '.$authUrl;
 echo "\r\n";
