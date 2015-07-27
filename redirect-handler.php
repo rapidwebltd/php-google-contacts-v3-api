@@ -10,7 +10,7 @@ if (!isset($_GET['code'])) {
 
 $code = $_GET['code'];
 
-require_once 'vendor/autoload.php';
+require_once '../../../vendor/autoload.php';
 
 use rapidweb\googlecontacts\helpers\GoogleHelper;
 
