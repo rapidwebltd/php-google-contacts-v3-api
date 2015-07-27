@@ -103,8 +103,39 @@ abstract class ContactFactory
         return new Contact($contactDetails);
     }
     
-    public static function update(Contact $contact)
+    public static function submitUpdates(Contact $updatedContact)
     {
+        $client = GoogleHelper::getClient();
+
+        $req = new \Google_Http_Request($updatedContact->selfURL);
+
+        $val = $client->getAuth()->authenticatedRequest($req);
+
+        $response = $val->getResponseBody();
+        
+        $xmlContact = simplexml_load_string($response);
+        $xmlContact->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
+        
+        $xmlContactsEntry = $xmlContact;
+        
+        $xmlContactsEntry->title = $updatedContact->name;
+        
+        $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
+
+        foreach ($contactGDNodes as $key => $value) {
+            $attributes = $value->attributes();
+
+            if ($key == 'email') {
+                $attributes['address'] = $updatedContact->email;
+            } else {
+                $xmlContactsEntry->$key = $updatedContact->$key;
+                $attributes['uri'] = '';
+            }
+        }
+        
+        $updatedXML = $xmlContactsEntry->asXML();
+        
+        // TODO: Submission of updated XML to edit URL
         
     }
 }
