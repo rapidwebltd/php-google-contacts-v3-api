@@ -21,14 +21,14 @@ abstract class GoogleHelper
 
         $client->setApplicationName('Rapid Web Google Contacts API');
 
-        $client->setScopes([/*
+        $client->setScopes(array(/*
         'https://apps-apis.google.com/a/feeds/groups/',
         'https://www.googleapis.com/auth/userinfo.email',
         'https://apps-apis.google.com/a/feeds/alias/',
         'https://apps-apis.google.com/a/feeds/user/',*/
         'https://www.google.com/m8/feeds/',
         /*'https://www.google.com/m8/feeds/user/',*/
-        ]);
+        ));
 
         $client->setClientId($config->clientID);
         $client->setClientSecret($config->clientSecret);
