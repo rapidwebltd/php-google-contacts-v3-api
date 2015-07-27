@@ -28,7 +28,7 @@ abstract class ContactFactory
 
             foreach ($xmlContactsEntry->children() as $key => $value) {
                 $attributes = $value->attributes();
-                
+
                 if ($key == 'link') {
                     if ($attributes['rel'] == 'edit') {
                         $contactDetails['editURL'] = (string) $attributes['href'];
@@ -55,7 +55,7 @@ abstract class ContactFactory
 
         return $contactsArray;
     }
-    
+
     public static function getBySelfURL($selfURL)
     {
         $client = GoogleHelper::getClient();
@@ -65,12 +65,12 @@ abstract class ContactFactory
         $val = $client->getAuth()->authenticatedRequest($req);
 
         $response = $val->getResponseBody();
-        
+
         $xmlContact = simplexml_load_string($response);
         $xmlContact->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
-        
+
         $xmlContactsEntry = $xmlContact;
-        
+
         $contactDetails = array();
 
         $contactDetails['id'] = (string) $xmlContactsEntry->id;
@@ -78,7 +78,7 @@ abstract class ContactFactory
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
             $attributes = $value->attributes();
-            
+
             if ($key == 'link') {
                 if ($attributes['rel'] == 'edit') {
                     $contactDetails['editURL'] = (string) $attributes['href'];
@@ -102,7 +102,7 @@ abstract class ContactFactory
 
         return new Contact($contactDetails);
     }
-    
+
     public static function submitUpdates(Contact $updatedContact)
     {
         $client = GoogleHelper::getClient();
@@ -112,14 +112,14 @@ abstract class ContactFactory
         $val = $client->getAuth()->authenticatedRequest($req);
 
         $response = $val->getResponseBody();
-        
+
         $xmlContact = simplexml_load_string($response);
         $xmlContact->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
-        
+
         $xmlContactsEntry = $xmlContact;
-        
+
         $xmlContactsEntry->title = $updatedContact->name;
-        
+
         $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
 
         foreach ($contactGDNodes as $key => $value) {
@@ -132,23 +132,23 @@ abstract class ContactFactory
                 $attributes['uri'] = '';
             }
         }
-        
+
         $updatedXML = $xmlContactsEntry->asXML();
-        
+
         $req = new \Google_Http_Request($updatedContact->editURL);
-        $req->setRequestHeaders(array('content-type'=>'application/atom+xml; charset=UTF-8; type=feed'));
+        $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
         $req->setRequestMethod('PUT');
         $req->setPostBody($updatedXML);
 
         $val = $client->getAuth()->authenticatedRequest($req);
-        
+
         $response = $val->getResponseBody();
-        
+
         $xmlContact = simplexml_load_string($response);
         $xmlContact->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
-        
+
         $xmlContactsEntry = $xmlContact;
-        
+
         $contactDetails = array();
 
         $contactDetails['id'] = (string) $xmlContactsEntry->id;
@@ -156,7 +156,7 @@ abstract class ContactFactory
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
             $attributes = $value->attributes();
-            
+
             if ($key == 'link') {
                 if ($attributes['rel'] == 'edit') {
                     $contactDetails['editURL'] = (string) $attributes['href'];
@@ -180,6 +180,4 @@ abstract class ContactFactory
 
         return new Contact($contactDetails);
     }
-    
-    
 }
