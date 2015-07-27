@@ -33,6 +33,7 @@ abstract class GoogleHelper
         $client->setClientSecret($config->clientSecret);
         $client->setRedirectUri($config->redirectUri);
         $client->setAccessType('offline'); 
+        $client->setApprovalPrompt('force');
         $client->setDeveloperKey($config->developerKey);
         
         if (isset($config->refreshToken) && $config->refreshToken)
