@@ -19,7 +19,11 @@ $accessToken = GoogleHelper::getAccessToken($client);
 
 if (!isset($accessToken->refresh_token))
 {
-    die ("Google did not respond with a refresh token. You can still use the Google Contacts API, but you may to re-authorise your application in the future.");
+    echo "Google did not respond with a refresh token. You can still use the Google Contacts API, but you may to re-authorise your application in the future. ";
+    
+    echo "Access token response:";
+    
+    var_dump($accessToken);
 }
 else
 {
