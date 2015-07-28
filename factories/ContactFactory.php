@@ -180,38 +180,34 @@ abstract class ContactFactory
 
         return new Contact($contactDetails);
     }
-    
+
     public static function create($name, $phoneNumber, $emailAddress)
     {
-        // create new entry
-		$doc  = new \DOMDocument();
-		$doc->formatOutput = true;
-		$entry = $doc->createElement('atom:entry');
-		$entry->setAttributeNS('http://www.w3.org/2000/xmlns/' , 'xmlns:atom', 'http://www.w3.org/2005/Atom');
-		$entry->setAttributeNS('http://www.w3.org/2000/xmlns/' , 'xmlns:gd', 'http://schemas.google.com/g/2005');
-		$entry->setAttributeNS('http://www.w3.org/2000/xmlns/' , 'xmlns:gd', 'http://schemas.google.com/g/2005');
-		$doc->appendChild($entry);
-							
-		// add name element
-		$title = $doc->createElement('title', $name);
-		$entry->appendChild($title);
-		
-		// add email elements
-	    $email = $doc->createElement('gd:email'); 
-	    $email->setAttribute('rel' ,'http://schemas.google.com/g/2005#work');
-	    $email->setAttribute('address', $emailAddress);
-	    $entry->appendChild($email);
-							
-		// add phone number element
-		$contact = $doc->createElement('gd:phoneNumber', $phoneNumber);
-		$contact->setAttribute('rel' ,'http://schemas.google.com/g/2005#work');
-		$entry->appendChild($contact);
-		
-		$xmlToSend = $doc->saveXML();
-		
-		$client = GoogleHelper::getClient();
-		
-		$req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full');
+        $doc = new \DOMDocument();
+        $doc->formatOutput = true;
+        $entry = $doc->createElement('atom:entry');
+        $entry->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:atom', 'http://www.w3.org/2005/Atom');
+        $entry->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:gd', 'http://schemas.google.com/g/2005');
+        $entry->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:gd', 'http://schemas.google.com/g/2005');
+        $doc->appendChild($entry);
+
+        $title = $doc->createElement('title', $name);
+        $entry->appendChild($title);
+
+        $email = $doc->createElement('gd:email');
+        $email->setAttribute('rel', 'http://schemas.google.com/g/2005#work');
+        $email->setAttribute('address', $emailAddress);
+        $entry->appendChild($email);
+
+        $contact = $doc->createElement('gd:phoneNumber', $phoneNumber);
+        $contact->setAttribute('rel', 'http://schemas.google.com/g/2005#work');
+        $entry->appendChild($contact);
+
+        $xmlToSend = $doc->saveXML();
+
+        $client = GoogleHelper::getClient();
+
+        $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full');
         $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
         $req->setRequestMethod('POST');
         $req->setPostBody($xmlToSend);
@@ -253,7 +249,7 @@ abstract class ContactFactory
                 $contactDetails[$key] = (string) $value;
             }
         }
-        
+
         return new Contact($contactDetails);
     }
 }
