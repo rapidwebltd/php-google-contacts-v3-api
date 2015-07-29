@@ -4,11 +4,19 @@
 
 PHP library for the Google Contacts API (v3)
 
-## Dependencies
+## Installation & Dependencies
 
-Install dependencies using `composer update` from within this pacakges root directory. 
+This package and its dependencies can be installed using `composer`. 
 
-A `vendor` directory should be created containing the necessary libraries.
+Just add the pacakge to your `composer.json` file as follows and run `composer update`.
+
+```json
+{
+  "require": {
+       "rapidwebltd/php-google-contacts-v3-api": "dev-master"
+   }
+}
+```
 
 ## Setup
 
