@@ -8,7 +8,7 @@ PHP library for the Google Contacts API (v3)
 
 This package and its dependencies can be installed using `composer`. 
 
-Just add the pacakge to your `composer.json` file as follows and run `composer update`.
+Just add the package to your `composer.json` file as follows and run `composer update`.
 
 ```json
 {
