@@ -21,7 +21,7 @@ Just add the package to your `composer.json` file as follows and run `composer u
 ## Setup
 
 1. Install required dependencies. See the 'Dependencies' section above.
-2. Copy or rename `.config_blank.json` to `.config.json`. Note the 
+2. Copy or rename `.config_blank.json` to `.config.json`. Note the dot (`.`) at the beginning of the file name.
 3. Fill in the `clientID`, `clientSecret` and `redirectUri` in `.config.json`.
   * Note that `redirectUri` should be configure to point towards the `redirect-handler.php` file.
   * The `clientID` and `clientSecret` can be found in the Google Developers console at https://console.developers.google.com/ under 'APIs & auth' -> 'Credentials'.
