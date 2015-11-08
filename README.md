@@ -24,7 +24,7 @@ Just add the package to your `composer.json` file as follows and run `composer u
 2. Copy or rename `.config_blank.json` to `.config.json`. Note the dot (`.`) at the beginning of the file name.
 3. Fill in the `clientID`, `clientSecret` and `redirectUri` in `.config.json`.
   * Note that `redirectUri` should be configure to point towards the `redirect-handler.php` file.
-  * The `clientID` and `clientSecret` can be found in the Google Developers console at https://console.developers.google.com/ under 'APIs & auth' -> 'Credentials'.
+  * The `clientID` and `clientSecret` can be found in the Google Developers console at https://console.developers.google.com/ under 'APIs & auth' -> 'Credentials', after enabling the Contacts API.
 4. Go to `authorise-application.php` in a web browser. This should give you a URL to authorise your application for Google Contacts.
 5. Go to the authorisation URL provided by the previous step.
 6. Accept the permissions requested on the page displayed. You should then be redirected back to the `redirect-handler.php` file.
