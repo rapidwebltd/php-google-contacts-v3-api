@@ -13,7 +13,7 @@ Just add the package to your `composer.json` file as follows and run `composer u
 ```json
 {
   "require": {
-       "rapidwebltd/php-google-contacts-v3-api": "dev-master"
+       "rapidwebltd/php-google-contacts-v3-api": "1.*"
    }
 }
 ```
