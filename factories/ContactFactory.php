@@ -20,6 +20,8 @@ abstract class ContactFactory
         $xmlContacts = simplexml_load_string($response);
         $xmlContacts->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
 
+        $contactsArray = array();
+
         foreach ($xmlContacts->entry as $xmlContactsEntry) {
             $contactDetails = array();
 
@@ -40,28 +42,28 @@ abstract class ContactFactory
 
             $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
             foreach ($contactGDNodes as $key => $value) {
-                switch ($key) {
-                    case 'organization':
-                        $contactDetails[$key]['orgName'] = (string) $value->orgName;
-                        $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
-                        break;
-                    case 'email':
-                        $attributes = $value->attributes();
-                        $emailadress = (string) $attributes['address'];
-                        $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                        $contactDetails[$key][$emailtype] = $emailadress;
-                        break;
-                    case 'phoneNumber':
-                        $attributes = $value->attributes();
-                        $uri = (string) $attributes['uri'];
-                        $type = substr(strstr($attributes['rel'], '#'), 1);
-                        $e164 = substr(strstr($uri, ':'), 1);
-                        $contactDetails[$key][$type] = $e164;
-                        break;
-                    default:
-                        $contactDetails[$key] = (string) $value;
-                        break;
-                }
+				switch ($key) {
+					case 'organization':
+						$contactDetails[$key]['orgName'] = (string) $value->orgName;
+						$contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
+						break;
+					case 'email':
+						$attributes = $value->attributes();
+						$emailadress=(string)$attributes['address'];
+						$emailtype=substr(strstr($attributes['rel'],"#"),1);
+						$contactDetails[$key][$emailtype]=$emailadress;
+						break;
+					case 'phoneNumber':
+						$attributes = $value->attributes();
+						$uri=(string)$attributes['uri'];
+						$type=substr(strstr($attributes['rel'],"#"),1);
+						$e164=substr(strstr($uri,":"),1);
+						$contactDetails[$key][$type]=$e164;
+						break;
+					default:
+						$contactDetails[$key] = (string) $value;
+						break;
+				}
             }
 
             $contactsArray[] = new Contact($contactDetails);
