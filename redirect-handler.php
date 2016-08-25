@@ -28,4 +28,12 @@ if (!isset($accessToken->refresh_token)) {
     var_dump($accessToken);
 } else {
     echo 'Refresh token is: '.$accessToken->refresh_token.' - Please add this to the config file.';
+    $configLocation = '.config.json';
+    $contents = file_get_contents($configLocation);
+    $data = json_decode($contents, true);
+    $data['refreshToken'] = $accessToken->refresh_token;
+    $newJsonString = json_encode($data, JSON_UNESCAPED_SLASHES);
+    file_put_contents($configLocation, $newJsonString);
+    
+    // TODO: Redirect to page
 }
