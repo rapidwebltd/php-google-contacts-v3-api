@@ -51,14 +51,14 @@ abstract class ContactFactory
                         $attributes = $value->attributes();
                         $emailadress = (string) $attributes['address'];
                         $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                        $contactDetails[$key][$emailtype] = $emailadress;
+                        $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
                         break;
                     case 'phoneNumber':
                         $attributes = $value->attributes();
                         $uri = (string) $attributes['uri'];
                         $type = substr(strstr($attributes['rel'], '#'), 1);
                         $e164 = substr(strstr($uri, ':'), 1);
-                        $contactDetails[$key][$type] = $e164;
+                        $contactDetails[$key][] = ['type' => $type, 'number' => $e164];
                         break;
                     default:
                         $contactDetails[$key] = (string) $value;
