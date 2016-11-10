@@ -6,7 +6,7 @@ abstract class GoogleHelper
 {
     private static function loadConfig()
     {
-        $contents = file_get_contents(__DIR__.'/../.config.json');
+        $contents = file_get_contents(__DIR__.'/../../../../.config.json');
 
         $config = json_decode($contents);
 
