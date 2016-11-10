@@ -51,7 +51,7 @@ abstract class ContactFactory
                         $attributes = $value->attributes();
                         $emailadress = (string) $attributes['address'];
                         $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                        $contactDetails[$key] = ['type' => $emailtype, 'number' => $emailadress];
+                        $contactDetails[$key] = ['type' => $emailtype, 'email' => $emailadress];
                         break;
                     case 'phoneNumber':
                         $attributes = $value->attributes();
