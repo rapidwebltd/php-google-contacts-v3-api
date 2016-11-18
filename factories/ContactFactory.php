@@ -105,14 +105,28 @@ abstract class ContactFactory
         }
 
         $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
-
         foreach ($contactGDNodes as $key => $value) {
-            $attributes = $value->attributes();
-
-            if ($key == 'email') {
-                $contactDetails[$key] = (string) $attributes['address'];
-            } else {
-                $contactDetails[$key] = (string) $value;
+            switch ($key) {
+                case 'organization':
+                    $contactDetails[$key]['orgName'] = (string) $value->orgName;
+                    $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
+                    break;
+                case 'email':
+                    $attributes = $value->attributes();
+                    $emailadress = (string) $attributes['address'];
+                    $emailtype = substr(strstr($attributes['rel'], '#'), 1);
+                    $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
+                    break;
+                case 'phoneNumber':
+                    $attributes = $value->attributes();
+                    $uri = (string) $attributes['uri'];
+                    $type = substr(strstr($attributes['rel'], '#'), 1);
+                    $e164 = substr(strstr($uri, ':'), 1);
+                    $contactDetails[$key][] = ['type' => $type, 'number' => $e164];
+                    break;
+                default:
+                    $contactDetails[$key] = (string) $value;
+                    break;
             }
         }
 
