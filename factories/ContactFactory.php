@@ -282,4 +282,15 @@ abstract class ContactFactory
 
         return new Contact($contactDetails);
     }
+    
+    public static function delete(Contact $toDelete)
+    {
+        $client = GoogleHelper::getClient();
+
+        $req = new \Google_Http_Request($toDelete->editURL);
+        $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
+        $req->setRequestMethod('DELETE');
+
+        $client->getAuth()->authenticatedRequest($req);
+    }
 }
