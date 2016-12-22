@@ -36,6 +36,8 @@ abstract class ContactFactory
                         $contactDetails['editURL'] = (string) $attributes['href'];
                     } elseif ($attributes['rel'] == 'self') {
                         $contactDetails['selfURL'] = (string) $attributes['href'];
+                    } elseif ($attributes['rel'] == 'http://schemas.google.com/contacts/2008/rel#edit-photo') {
+                        $contactDetails['photoURL'] = (string) $attributes['href'];
                     }
                 }
             }
@@ -100,6 +102,8 @@ abstract class ContactFactory
                     $contactDetails['editURL'] = (string) $attributes['href'];
                 } elseif ($attributes['rel'] == 'self') {
                     $contactDetails['selfURL'] = (string) $attributes['href'];
+                } elseif ($attributes['rel'] == 'http://schemas.google.com/contacts/2008/rel#edit-photo') {
+                    $contactDetails['photoURL'] = (string) $attributes['href'];
                 }
             }
         }
@@ -292,5 +296,15 @@ abstract class ContactFactory
         $req->setRequestMethod('DELETE');
 
         $client->getAuth()->authenticatedRequest($req);
+    }
+    
+    public static function getPhoto($photoURL)
+    {
+        $client = GoogleHelper::getClient();
+        $req = new \Google_Http_Request($photoURL);
+        $req->setRequestMethod('GET');
+        $val = $client->getAuth()->authenticatedRequest($req);
+        $response = $val->getResponseBody();
+        return $response;
     }
 }
