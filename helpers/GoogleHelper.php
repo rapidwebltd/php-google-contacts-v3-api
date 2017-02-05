@@ -6,6 +6,7 @@ abstract class GoogleHelper
 {
     private static function loadConfig()
     {
+        die(var_dump('test'));
         $configPath = __DIR__.'/../../../../.config.json';
         if(!file_exists($configPath)) throw new \Exception('Not found config.json');
         $contents = file_get_contents($configPath);
