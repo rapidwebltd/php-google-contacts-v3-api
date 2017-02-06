@@ -4,15 +4,34 @@ namespace rapidweb\googlecontacts\helpers;
 
 abstract class GoogleHelper
 {
+    private static $_config;
+
+    public static function initConfig(
+        $clientID,
+        $clientSecret,
+        $redirectUri,
+        $developerKey,
+        $refreshToken
+    ) {
+        self::$_config = [
+            'clientID' => $clientID,
+            'clientSecret' => $clientSecret,
+            'redirectUri' => $redirectUri,
+            'developerKey' => $developerKey,
+            'refreshToken' => $refreshToken,
+        ];
+    }
+
     private static function loadConfig()
     {
-        die(var_dump('test'));
-        $configPath = __DIR__.'/../../../../.config.json';
-        if(!file_exists($configPath)) throw new \Exception('Not found config.json');
-        $contents = file_get_contents($configPath);
-        $config = json_decode($contents);
+        if (NULL === self::$_config) {
+            $configPath = __DIR__.'/../../../../.config.json';
+            if(!file_exists($configPath)) throw new \Exception('Not found config.json');
+            $contents = file_get_contents($configPath);
+            self::$_config = json_decode($contents);
+        }
 
-        return $config;
+        return self::$_config;
     }
 
     public static function getClient()
