@@ -13,13 +13,12 @@ abstract class GoogleHelper
         $developerKey,
         $refreshToken
     ) {
-        self::$_config = [
-            'clientID' => $clientID,
-            'clientSecret' => $clientSecret,
-            'redirectUri' => $redirectUri,
-            'developerKey' => $developerKey,
-            'refreshToken' => $refreshToken,
-        ];
+        self::$_config = new \stdClass();
+        self::$_config->clientID = $clientID;
+        self::$_config->clientSecret = $clientSecret;
+        self::$_config->redirectUri = $redirectUri;
+        self::$_config->developerKey = $developerKey;
+        self::$_config->refreshToken = $refreshToken;
     }
 
     private static function loadConfig()
