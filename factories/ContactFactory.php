@@ -7,9 +7,9 @@ use rapidweb\googlecontacts\objects\Contact;
 
 abstract class ContactFactory
 {
-    public static function getAll()
+    public static function getAll($custom_config = NULL)
     {
-        $client = GoogleHelper::getClient();
+        $client = GoogleHelper::getClient($custom_config);
 
         $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full?max-results=10000&updated-min=2007-03-16T00:00:00');
 
