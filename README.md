@@ -30,9 +30,9 @@ Also, take a look at the following files for basic examples of how to retrieve c
 * `test.php`
 * `test_individual.php`
 
-## Confg file override
+## Config file override
 
-Each method has optional argument for config file override. It is useful when you want to use work witch multiple Google accounts at the same time.
+Each method has optional argument for config file override. It is useful when you want to use work with multiple Google accounts at the same time.
 
 ```php
 $custom_config = (object) array(
