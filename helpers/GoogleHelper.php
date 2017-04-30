@@ -21,9 +21,9 @@ abstract class GoogleHelper
         self::$_config->refreshToken = $refreshToken;
     }
 
-    private static function loadConfig($custom_config = NULL)
+    private static function loadConfig($customConfig = NULL)
     {
-        self::$_config = $custom_config;
+        self::$_config = $customConfig;
         if (NULL === self::$_config) {
             $configPath = __DIR__.'/../../../../.config.json';
             if(!file_exists($configPath)) throw new \Exception('Not found config.json');
@@ -34,9 +34,9 @@ abstract class GoogleHelper
         return self::$_config;
     }
 
-    public static function getClient($custom_config = NULL)
+    public static function getClient($customConfig = NULL)
     {
-        $config = self::loadConfig($custom_config);
+        $config = self::loadConfig($customConfig);
 
         $client = new \Google_Client();
 

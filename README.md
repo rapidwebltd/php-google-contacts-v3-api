@@ -35,7 +35,7 @@ Also, take a look at the following files for basic examples of how to retrieve c
 Each method has optional argument for config file override. It is useful when you want to use work with multiple Google accounts at the same time.
 
 ```php
-$custom_config = (object) array(
+$customConfig = (object) array(
     'clientID' => '<clientId which you get according to setup above>',
     'clientSecret' => '<clientSecret which you get according to setup above>',
     'redirectUri' => '<your redirect uri>',
@@ -43,7 +43,7 @@ $custom_config = (object) array(
     'refreshToken' => '<refresh token specific for google account>'
 );
 
-$contacts = ContactFactory::getAll($custom_config);
+$contacts = ContactFactory::getAll($customConfig);
 ```
 
 You have to define all variables as the original config is completely ignored. To be more precise, it doesn't have to exist at all.

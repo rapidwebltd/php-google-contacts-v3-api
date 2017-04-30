@@ -7,9 +7,9 @@ use rapidweb\googlecontacts\objects\Contact;
 
 abstract class ContactFactory
 {
-    public static function getAll($custom_config = NULL)
+    public static function getAll($customConfig = NULL)
     {
-        $client = GoogleHelper::getClient($custom_config);
+        $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full?max-results=10000&updated-min=2007-03-16T00:00:00');
 
@@ -74,9 +74,9 @@ abstract class ContactFactory
         return $contactsArray;
     }
 
-    public static function getBySelfURL($selfURL, $custom_config = NULL)
+    public static function getBySelfURL($selfURL, $customConfig = NULL)
     {
-        $client = GoogleHelper::getClient($custom_config);
+        $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request($selfURL);
 
@@ -137,9 +137,9 @@ abstract class ContactFactory
         return new Contact($contactDetails);
     }
 
-    public static function submitUpdates(Contact $updatedContact, $custom_config = NULL)
+    public static function submitUpdates(Contact $updatedContact, $customConfig = NULL)
     {
-        $client = GoogleHelper::getClient($custom_config);
+        $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request($updatedContact->selfURL);
 
@@ -215,7 +215,7 @@ abstract class ContactFactory
         return new Contact($contactDetails);
     }
 
-    public static function create($name, $phoneNumber, $emailAddress, $custom_config = NULL)
+    public static function create($name, $phoneNumber, $emailAddress, $customConfig = NULL)
     {
         $doc = new \DOMDocument();
         $doc->formatOutput = true;
@@ -239,7 +239,7 @@ abstract class ContactFactory
 
         $xmlToSend = $doc->saveXML();
 
-        $client = GoogleHelper::getClient($custom_config);
+        $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full');
         $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
@@ -287,9 +287,9 @@ abstract class ContactFactory
         return new Contact($contactDetails);
     }
     
-    public static function delete(Contact $toDelete, $custom_config = NULL)
+    public static function delete(Contact $toDelete, $customConfig = NULL)
     {
-        $client = GoogleHelper::getClient($custom_config);
+        $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request($toDelete->editURL);
         $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
@@ -298,9 +298,9 @@ abstract class ContactFactory
         $client->getAuth()->authenticatedRequest($req);
     }
     
-    public static function getPhoto($photoURL, $custom_config = NULL)
+    public static function getPhoto($photoURL, $customConfig = NULL)
     {
-        $client = GoogleHelper::getClient($custom_config);
+        $client = GoogleHelper::getClient($customConfig);
         $req = new \Google_Http_Request($photoURL);
         $req->setRequestMethod('GET');
         $val = $client->getAuth()->authenticatedRequest($req);
