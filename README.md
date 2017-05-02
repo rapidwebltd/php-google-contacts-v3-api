@@ -43,7 +43,7 @@ The `selfURL` contained within each `Contact` object is the unique reference to 
 
 To retrieve a specific contact (by its selfURL), use the following code.
 
-```
+```php
 $selfURL = "...";
 
 $contact = rapidweb\googlecontacts\factories\ContactFactory::getBySelfURL($selfURL);
@@ -55,7 +55,7 @@ This `ContactFactory::getBySelfURL` method will return a single `Contact` object
 
 Google Contact properties are accessed as follows.
 
-```
+```php
 $selfURL = "...";
 
 $contact = rapidweb\googlecontacts\factories\ContactFactory::getBySelfURL($selfURL);
@@ -73,7 +73,7 @@ You must first retrieve a `Contact` object using one of the methods mentioned pr
 
 The following code demonstrates in full retrieving a contact, modifying it and submitting the updates.
 
-```
+```php
 $selfURL = "...";
 
 $contact = rapidweb\googlecontacts\factories\ContactFactory::getBySelfURL($selfURL);
@@ -93,7 +93,7 @@ var_dump($contactAfterUpdate);
 
 Creating a new Google Contact is very easy. Simply call the `ContactFactory::create($name, $phoneNumber, $emailAddress)` method, passing through appropriate parameters. This method will return the created contact as a `Contact` object including its newly assigned `selfURL`.
 
-```
+```php
 $name = "Frodo Baggins";
 $phoneNumber = "06439111222";
 $emailAddress = "frodo@example.com";
