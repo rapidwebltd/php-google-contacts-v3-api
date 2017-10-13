@@ -27,6 +27,7 @@ abstract class ContactFactory
 
             $contactDetails['id'] = (string) $xmlContactsEntry->id;
             $contactDetails['name'] = (string) $xmlContactsEntry->title;
+            $contactDetails['content'] = (string) $xmlContactsEntry->content;
 
             foreach ($xmlContactsEntry->children() as $key => $value) {
                 $attributes = $value->attributes();
@@ -93,6 +94,7 @@ abstract class ContactFactory
 
         $contactDetails['id'] = (string) $xmlContactsEntry->id;
         $contactDetails['name'] = (string) $xmlContactsEntry->title;
+        $contactDetails['content'] = (string) $xmlContactsEntry->content;
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
             $attributes = $value->attributes();
@@ -187,6 +189,7 @@ abstract class ContactFactory
 
         $contactDetails['id'] = (string) $xmlContactsEntry->id;
         $contactDetails['name'] = (string) $xmlContactsEntry->title;
+        $contactDetails['content'] = (string) $xmlContactsEntry->content;
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
             $attributes = $value->attributes();
@@ -215,7 +218,7 @@ abstract class ContactFactory
         return new Contact($contactDetails);
     }
 
-    public static function create($name, $phoneNumber, $emailAddress, $customConfig = NULL)
+    public static function create($name, $phoneNumber, $emailAddress, $note, $customConfig = NULL)
     {
         $doc = new \DOMDocument();
         $doc->formatOutput = true;
@@ -236,6 +239,10 @@ abstract class ContactFactory
         $contact = $doc->createElement('gd:phoneNumber', $phoneNumber);
         $contact->setAttribute('rel', 'http://schemas.google.com/g/2005#work');
         $entry->appendChild($contact);
+
+        $note = $doc->createElement('atom:content', $note);
+        $note->setAttribute('rel', 'http://schemas.google.com/g/2005#kind');
+        $entry->appendChild($note);
 
         $xmlToSend = $doc->saveXML();
 
