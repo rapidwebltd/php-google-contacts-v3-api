@@ -63,6 +63,7 @@ $contact = rapidweb\googlecontacts\factories\ContactFactory::getBySelfURL($selfU
 echo $contact->name;
 echo $contact->phoneNumber;
 echo $contact->email;
+echo $contact->content;
 ```
 
 ### Updating existing Google Contacts
@@ -83,6 +84,7 @@ var_dump($contact);
 $contact->name = 'Test';
 $contact->phoneNumber = '07812363789';
 $contact->email = 'test@example.com';
+$contact->content = 'Note for example';
 
 $contactAfterUpdate = rapidweb\googlecontacts\factories\ContactFactory::submitUpdates($contact);
 
@@ -97,8 +99,9 @@ Creating a new Google Contact is very easy. Simply call the `ContactFactory::cre
 $name = "Frodo Baggins";
 $phoneNumber = "06439111222";
 $emailAddress = "frodo@example.com";
+$note = "Note for example";
 
-$newContact = rapidweb\googlecontacts\factories\ContactFactory::create($name, $phoneNumber, $emailAddress);
+$newContact = rapidweb\googlecontacts\factories\ContactFactory::create($name, $phoneNumber, $emailAddress, $note);
 ```
 
 ### Config file override

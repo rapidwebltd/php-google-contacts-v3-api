@@ -15,6 +15,7 @@ var_dump($contact);
 $contact->name = 'Test';
 $contact->phoneNumber = '07812363789';
 $contact->email = 'test@example.com';
+$contact->content = 'Note for example';
 
 $contactAfterUpdate = ContactFactory::submitUpdates($contact);
 
