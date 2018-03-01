@@ -1,5 +1,7 @@
 # php-google-contacts-v3-api
 
+![Packagist](https://img.shields.io/packagist/dt/rapidwebltd/php-google-contacts-v3-api.svg)
+
 PHP library for the Google Contacts API (v3)
 
 ## Installation & Dependencies
