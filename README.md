@@ -1,4 +1,4 @@
-# php-google-contacts-v3-api
+# PHP Google Contacts v3 API
 
 ![Packagist](https://img.shields.io/packagist/dt/rapidwebltd/php-google-contacts-v3-api.svg)
 
