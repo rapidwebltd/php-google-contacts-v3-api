@@ -2,12 +2,27 @@
 
 namespace rapidweb\googlecontacts\factories;
 
-use rapidweb\googlecontacts\helpers\GoogleHelper;
 use rapidweb\googlecontacts\objects\Contact;
+use rapidweb\googlecontacts\helpers\GoogleHelper;
 
 abstract class ContactFactory
 {
-    public static function getAll($customConfig = NULL)
+    public static function getLoggedInUser($customConfig = null)
+    {
+        {
+            $client = GoogleHelper::getClient($customConfig);
+
+            $req = new \Google_Http_Request('https://www.googleapis.com/oauth2/v1/userinfo?alt=json');
+
+            $val = $client->getAuth()->authenticatedRequest($req);
+
+            $response = $val->getResponseBody();
+
+            return json_decode($response);
+        }
+    }
+
+    public static function getAll($customConfig = null)
     {
         $client = GoogleHelper::getClient($customConfig);
 
@@ -20,13 +35,13 @@ abstract class ContactFactory
         $xmlContacts = simplexml_load_string($response);
         $xmlContacts->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
 
-        $contactsArray = array();
+        $contactsArray = [];
 
         foreach ($xmlContacts->entry as $xmlContactsEntry) {
-            $contactDetails = array();
+            $contactDetails = [];
 
-            $contactDetails['id'] = (string) $xmlContactsEntry->id;
-            $contactDetails['name'] = (string) $xmlContactsEntry->title;
+            $contactDetails['id']      = (string) $xmlContactsEntry->id;
+            $contactDetails['name']    = (string) $xmlContactsEntry->title;
             $contactDetails['content'] = (string) $xmlContactsEntry->content;
 
             foreach ($xmlContactsEntry->children() as $key => $value) {
@@ -47,25 +62,25 @@ abstract class ContactFactory
             foreach ($contactGDNodes as $key => $value) {
                 switch ($key) {
                     case 'organization':
-                        $contactDetails[$key]['orgName'] = (string) $value->orgName;
-                        $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
-                        break;
+                    $contactDetails[$key]['orgName']  = (string) $value->orgName;
+                    $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
+                    break;
                     case 'email':
-                        $attributes = $value->attributes();
-                        $emailadress = (string) $attributes['address'];
-                        $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                        $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
-                        break;
+                    $attributes             = $value->attributes();
+                    $emailadress            = (string) $attributes['address'];
+                    $emailtype              = substr(strstr($attributes['rel'], '#'), 1);
+                    $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
+                    break;
                     case 'phoneNumber':
-                        $attributes = $value->attributes();
+                    $attributes = $value->attributes();
                         //$uri = (string) $attributes['uri'];
-                        $type = substr(strstr($attributes['rel'], '#'), 1);
+                    $type = substr(strstr($attributes['rel'], '#'), 1);
                         //$e164 = substr(strstr($uri, ':'), 1);
-                        $contactDetails[$key][] = ['type' => $type, 'number' => $value->__toString()];
-                        break;
+                    $contactDetails[$key][] = ['type' => $type, 'number' => $value->__toString()];
+                    break;
                     default:
-                        $contactDetails[$key] = (string) $value;
-                        break;
+                    $contactDetails[$key] = (string) $value;
+                    break;
                 }
             }
 
@@ -75,7 +90,7 @@ abstract class ContactFactory
         return $contactsArray;
     }
 
-    public static function getBySelfURL($selfURL, $customConfig = NULL)
+    public static function getBySelfURL($selfURL, $customConfig = null)
     {
         $client = GoogleHelper::getClient($customConfig);
 
@@ -90,10 +105,10 @@ abstract class ContactFactory
 
         $xmlContactsEntry = $xmlContact;
 
-        $contactDetails = array();
+        $contactDetails = [];
 
-        $contactDetails['id'] = (string) $xmlContactsEntry->id;
-        $contactDetails['name'] = (string) $xmlContactsEntry->title;
+        $contactDetails['id']      = (string) $xmlContactsEntry->id;
+        $contactDetails['name']    = (string) $xmlContactsEntry->title;
         $contactDetails['content'] = (string) $xmlContactsEntry->content;
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
@@ -114,32 +129,32 @@ abstract class ContactFactory
         foreach ($contactGDNodes as $key => $value) {
             switch ($key) {
                 case 'organization':
-                    $contactDetails[$key]['orgName'] = (string) $value->orgName;
-                    $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
-                    break;
+                $contactDetails[$key]['orgName']  = (string) $value->orgName;
+                $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
+                break;
                 case 'email':
-                    $attributes = $value->attributes();
-                    $emailadress = (string) $attributes['address'];
-                    $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                    $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
-                    break;
+                $attributes             = $value->attributes();
+                $emailadress            = (string) $attributes['address'];
+                $emailtype              = substr(strstr($attributes['rel'], '#'), 1);
+                $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
+                break;
                 case 'phoneNumber':
-                    $attributes = $value->attributes();
-                    $uri = (string) $attributes['uri'];
-                    $type = substr(strstr($attributes['rel'], '#'), 1);
-                    $e164 = substr(strstr($uri, ':'), 1);
-                    $contactDetails[$key][] = ['type' => $type, 'number' => $e164];
-                    break;
+                $attributes             = $value->attributes();
+                $uri                    = (string) $attributes['uri'];
+                $type                   = substr(strstr($attributes['rel'], '#'), 1);
+                $e164                   = substr(strstr($uri, ':'), 1);
+                $contactDetails[$key][] = ['type' => $type, 'number' => $e164];
+                break;
                 default:
-                    $contactDetails[$key] = (string) $value;
-                    break;
+                $contactDetails[$key] = (string) $value;
+                break;
             }
         }
 
         return new Contact($contactDetails);
     }
 
-    public static function submitUpdates(Contact $updatedContact, $customConfig = NULL)
+    public static function submitUpdates(Contact $updatedContact, $customConfig = null)
     {
         $client = GoogleHelper::getClient($customConfig);
 
@@ -165,14 +180,14 @@ abstract class ContactFactory
                 $attributes['address'] = $updatedContact->email;
             } else {
                 $xmlContactsEntry->$key = $updatedContact->$key;
-                $attributes['uri'] = '';
+                $attributes['uri']      = '';
             }
         }
 
         $updatedXML = $xmlContactsEntry->asXML();
 
         $req = new \Google_Http_Request($updatedContact->editURL);
-        $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
+        $req->setRequestHeaders(['content-type' => 'application/atom+xml; charset=UTF-8; type=feed']);
         $req->setRequestMethod('PUT');
         $req->setPostBody($updatedXML);
 
@@ -185,10 +200,10 @@ abstract class ContactFactory
 
         $xmlContactsEntry = $xmlContact;
 
-        $contactDetails = array();
+        $contactDetails = [];
 
-        $contactDetails['id'] = (string) $xmlContactsEntry->id;
-        $contactDetails['name'] = (string) $xmlContactsEntry->title;
+        $contactDetails['id']      = (string) $xmlContactsEntry->id;
+        $contactDetails['name']    = (string) $xmlContactsEntry->title;
         $contactDetails['content'] = (string) $xmlContactsEntry->content;
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
@@ -218,18 +233,19 @@ abstract class ContactFactory
         return new Contact($contactDetails);
     }
 
-    public static function create($name, $phoneNumber, $emailAddress, $note, $customConfig = NULL)
+    public static function create($name, $phoneNumber, $emailAddress, $note, $customConfig = null)
     {
-        $doc = new \DOMDocument();
+        $doc               = new \DOMDocument();
         $doc->formatOutput = true;
-        $entry = $doc->createElement('atom:entry');
+        $entry             = $doc->createElement('atom:entry');
         $entry->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:atom', 'http://www.w3.org/2005/Atom');
         $entry->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:gd', 'http://schemas.google.com/g/2005');
         $entry->setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:gd', 'http://schemas.google.com/g/2005');
         $doc->appendChild($entry);
 
-        $title = $doc->createElement('title', $name);
-        $entry->appendChild($title);
+        $nameEntry = $doc->createElement('gd:name');
+        $nameEntry->appendChild($doc->createElement('gd:givenName', $name));
+        $entry->appendChild($nameEntry);
 
         $email = $doc->createElement('gd:email');
         $email->setAttribute('rel', 'http://schemas.google.com/g/2005#work');
@@ -249,7 +265,7 @@ abstract class ContactFactory
         $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full');
-        $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
+        $req->setRequestHeaders(['content-type' => 'application/atom+xml; charset=UTF-8; type=feed']);
         $req->setRequestMethod('POST');
         $req->setPostBody($xmlToSend);
 
@@ -262,9 +278,9 @@ abstract class ContactFactory
 
         $xmlContactsEntry = $xmlContact;
 
-        $contactDetails = array();
+        $contactDetails = [];
 
-        $contactDetails['id'] = (string) $xmlContactsEntry->id;
+        $contactDetails['id']   = (string) $xmlContactsEntry->id;
         $contactDetails['name'] = (string) $xmlContactsEntry->title;
 
         foreach ($xmlContactsEntry->children() as $key => $value) {
@@ -293,25 +309,26 @@ abstract class ContactFactory
 
         return new Contact($contactDetails);
     }
-    
-    public static function delete(Contact $toDelete, $customConfig = NULL)
+
+    public static function delete(Contact $toDelete, $customConfig = null)
     {
         $client = GoogleHelper::getClient($customConfig);
 
         $req = new \Google_Http_Request($toDelete->editURL);
-        $req->setRequestHeaders(array('content-type' => 'application/atom+xml; charset=UTF-8; type=feed'));
+        $req->setRequestHeaders(['content-type' => 'application/atom+xml; charset=UTF-8; type=feed']);
         $req->setRequestMethod('DELETE');
 
         $client->getAuth()->authenticatedRequest($req);
     }
-    
-    public static function getPhoto($photoURL, $customConfig = NULL)
+
+    public static function getPhoto($photoURL, $customConfig = null)
     {
         $client = GoogleHelper::getClient($customConfig);
-        $req = new \Google_Http_Request($photoURL);
+        $req    = new \Google_Http_Request($photoURL);
         $req->setRequestMethod('GET');
-        $val = $client->getAuth()->authenticatedRequest($req);
+        $val      = $client->getAuth()->authenticatedRequest($req);
         $response = $val->getResponseBody();
+
         return $response;
     }
 }
