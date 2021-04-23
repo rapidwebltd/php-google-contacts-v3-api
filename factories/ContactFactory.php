@@ -11,65 +11,76 @@ abstract class ContactFactory
     {
         $client = GoogleHelper::getClient($customConfig);
 
-        $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full?max-results=10000&updated-min=2007-03-16T00:00:00');
+        // $req = new \Google_Http_Request('https://www.google.com/m8/feeds/contacts/default/full?max-results=10000&updated-min=2007-03-16T00:00:00');
 
-        $val = $client->getAuth()->authenticatedRequest($req);
-
-        $response = $val->getResponseBody();
-
-        $xmlContacts = simplexml_load_string($response);
-        $xmlContacts->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
-
+        $start_index = 0;
         $contactsArray = array();
 
-        foreach ($xmlContacts->entry as $xmlContactsEntry) {
-            $contactDetails = array();
+        // otherwise only 1500 contacts are selected
+        for ( $i = 1; $i <= 20; $i ++ ) {
 
-            $contactDetails['id'] = (string) $xmlContactsEntry->id;
-            $contactDetails['name'] = (string) $xmlContactsEntry->title;
-            $contactDetails['content'] = (string) $xmlContactsEntry->content;
+            $req         = new \Google_Http_Request( 'https://www.google.com/m8/feeds/contacts/default/full?start-index=' . $start_index . '&max-results=1000&updated-min=2007-03-16T00:00:00' );
+            $val = $client->getAuth()->authenticatedRequest($req);
 
-            foreach ($xmlContactsEntry->children() as $key => $value) {
-                $attributes = $value->attributes();
+            $response = $val->getResponseBody();
 
-                if ($key == 'link') {
-                    if ($attributes['rel'] == 'edit') {
-                        $contactDetails['editURL'] = (string) $attributes['href'];
-                    } elseif ($attributes['rel'] == 'self') {
-                        $contactDetails['selfURL'] = (string) $attributes['href'];
-                    } elseif ($attributes['rel'] == 'http://schemas.google.com/contacts/2008/rel#edit-photo') {
-                        $contactDetails['photoURL'] = (string) $attributes['href'];
+            $xmlContacts = simplexml_load_string($response);
+            $xmlContacts->registerXPathNamespace('gd', 'http://schemas.google.com/g/2005');
+
+            // $contactsArray = array();
+
+            foreach ($xmlContacts->entry as $xmlContactsEntry) {
+                $contactDetails = array();
+
+                $contactDetails['id'] = (string)$xmlContactsEntry->id;
+                $contactDetails['name'] = (string)$xmlContactsEntry->title;
+                $contactDetails['content'] = (string)$xmlContactsEntry->content;
+
+                foreach ($xmlContactsEntry->children() as $key => $value) {
+                    $attributes = $value->attributes();
+
+                    if ($key == 'link') {
+                        if ($attributes['rel'] == 'edit') {
+                            $contactDetails['editURL'] = (string)$attributes['href'];
+                        } elseif ($attributes['rel'] == 'self') {
+                            $contactDetails['selfURL'] = (string)$attributes['href'];
+                        } elseif ($attributes['rel'] == 'http://schemas.google.com/contacts/2008/rel#edit-photo') {
+                            $contactDetails['photoURL'] = (string)$attributes['href'];
+                        }
                     }
                 }
-            }
 
-            $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
-            foreach ($contactGDNodes as $key => $value) {
-                switch ($key) {
-                    case 'organization':
-                        $contactDetails[$key]['orgName'] = (string) $value->orgName;
-                        $contactDetails[$key]['orgTitle'] = (string) $value->orgTitle;
-                        break;
-                    case 'email':
-                        $attributes = $value->attributes();
-                        $emailadress = (string) $attributes['address'];
-                        $emailtype = substr(strstr($attributes['rel'], '#'), 1);
-                        $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
-                        break;
-                    case 'phoneNumber':
-                        $attributes = $value->attributes();
-                        //$uri = (string) $attributes['uri'];
-                        $type = substr(strstr($attributes['rel'], '#'), 1);
-                        //$e164 = substr(strstr($uri, ':'), 1);
-                        $contactDetails[$key][] = ['type' => $type, 'number' => $value->__toString()];
-                        break;
-                    default:
-                        $contactDetails[$key] = (string) $value;
-                        break;
+                $contactGDNodes = $xmlContactsEntry->children('http://schemas.google.com/g/2005');
+                foreach ($contactGDNodes as $key => $value) {
+                    switch ($key) {
+                        case 'organization':
+                            $contactDetails[$key]['orgName'] = (string)$value->orgName;
+                            $contactDetails[$key]['orgTitle'] = (string)$value->orgTitle;
+                            break;
+                        case 'email':
+                            $attributes = $value->attributes();
+                            $emailadress = (string)$attributes['address'];
+                            $emailtype = substr(strstr($attributes['rel'], '#'), 1);
+                            $contactDetails[$key][] = ['type' => $emailtype, 'email' => $emailadress];
+                            break;
+                        case 'phoneNumber':
+                            $attributes = $value->attributes();
+                            //$uri = (string) $attributes['uri'];
+                            $type = substr(strstr($attributes['rel'], '#'), 1);
+                            //$e164 = substr(strstr($uri, ':'), 1);
+                            $contactDetails[$key][] = ['type' => $type, 'number' => $value->__toString()];
+                            break;
+                        default:
+                            $contactDetails[$key] = (string)$value;
+                            break;
+                    }
                 }
+
+                $contactsArray[] = new Contact($contactDetails);
             }
 
-            $contactsArray[] = new Contact($contactDetails);
+            $start_index = $i * 1000 + 1;
+
         }
 
         return $contactsArray;
