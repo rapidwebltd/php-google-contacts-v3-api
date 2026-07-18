@@ -1,10 +1,11 @@
 # PHP Google Contacts v3 API
 
+> [!WARNING]
+> This package is retired because Google shut down the Contacts API v3 on 19 January 2022. Use [`rapidwebltd/php-google-people-api`](https://packagist.org/packages/rapidwebltd/php-google-people-api) and migrate to the Google People API instead.
+
 [![Packagist](https://img.shields.io/packagist/dt/rapidwebltd/php-google-contacts-v3-api.svg)](https://packagist.org/packages/rapidwebltd/php-google-contacts-v3-api/stats)
 
 PHP library for the Google Contacts API (v3)
-
-**💡 NOTE: If you're starting a new project, we strongly recommend using our [PHP Google People API](https://github.com/rapidwebltd/php-google-people-api) package instead. It is more capable than this package and uses a newer API which will probably be supported for longer.**
 
 ## Installation & Dependencies
 
